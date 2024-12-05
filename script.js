@@ -1,39 +1,33 @@
-const API_KEY = 'AIzaSyCO_xMxlc29j8RuUu78sru4TlafFgXebvE'; 
-// Replace with your actual Gemini API key – this stores the API key to authenticate requests to the Gemini API.
+const API_KEY = 'api key '; 
+
 
 const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent';
-// The base URL of the Gemini API used to generate content (for text-based responses).
 
 const chatMessages = document.getElementById('chat-messages');
-// Gets the DOM element with the ID 'chat-messages', where the chat messages (user and bot) will be displayed.
 
 const userInput = document.getElementById('user-input');
-// Gets the DOM element with the ID 'user-input', which is the input field where the user types their message.
 
 const sendButton = document.getElementById('send-button');
-// Gets the DOM element with the ID 'send-button', which is the button the user clicks to send their message.
 
 async function generateResponse(prompt) {
-// Defines an asynchronous function `generateResponse` that takes the user's input (prompt) and generates a response from the API.
+
 
     const response = await fetch(`${API_URL}?key=${API_KEY}`, {
-    // Sends a POST request to the Gemini API endpoint with the API key appended to the URL.
+    
         method: 'POST',
-        // Specifies the HTTP method (POST) to send data to the API.
-
+        
         headers: {
             'Content-Type': 'application/json',
         },
-        // Sets the request headers to indicate that the content being sent is in JSON format.
-
+        
         body: JSON.stringify({
-        // The body of the request, converting the user's message into the format required by the API.
+       
             contents: [
                 {
                     parts: [
                         {
                             text: prompt
-                            // The user's input (`prompt`) is inserted into the request payload.
+                           
                         }
                     ]
                 }
@@ -42,76 +36,70 @@ async function generateResponse(prompt) {
     });
 
     if (!response.ok) {
-    // Checks if the API request was unsuccessful (i.e., the response is not OK).
+    
         throw new Error('Failed to generate response');
-        // If there's an error, an exception is thrown with an error message.
+      
     }
 
     const data = await response.json();
-    // Converts the API response to JSON format.
-
+    
     return data.candidates[0].content.parts[0].text;
-    // Returns the first generated response from the API (the text part of the response).
+    
 }
 
 function cleanMarkdown(text) {
-// Defines a function `cleanMarkdown` to remove any Markdown formatting (like headers, bold text, etc.) from the response.
+
     return text
         .replace(/#{1,6}\s?/g, '')
-        // Removes any Markdown headers (e.g., #, ##, ###).
+       
 
         .replace(/\*\*/g, '')
-        // Removes bold formatting (double asterisks **).
+        
 
         .replace(/\n{3,}/g, '\n\n')
-        // Limits excessive newlines to a maximum of two (replaces more than two newlines with two).
-
+      
         .trim();
-        // Removes any whitespace from the start and end of the string.
+        
 }
 
 function addMessage(message, isUser) {
-// Defines a function `addMessage` to add a new message to the chat display. It takes the `message` (text) and `isUser` (boolean indicating whether the message is from the user or the bot).
+
     const messageElement = document.createElement('div');
     messageElement.classList.add('message');
-    // Creates a new `div` element for the message and adds the 'message' CSS class.
+    
 
     messageElement.classList.add(isUser ? 'user-message' : 'bot-message');
-    // Adds a class based on whether the message is from the user ('user-message') or the bot ('bot-message').
+    
 
     const profileImage = document.createElement('img');
     profileImage.classList.add('profile-image');
-    // Creates an image element for the profile picture (either the user or the bot) and adds the 'profile-image' CSS class.
+    
 
     profileImage.src = isUser ? 'userr.jpg' : 'bott.jpeg';
-    // Sets the image source depending on whether it's a user or bot message ('user.jpg' or 'bot.jpg').
-
+   
     profileImage.alt = isUser ? 'User' : 'Bot';
-    // Sets the alternate text for the image (for accessibility), either 'User' or 'Bot'.
+   
 
     const messageContent = document.createElement('div');
     messageContent.classList.add('message-content');
-    // Creates a `div` element to hold the text content of the message and adds the 'message-content' CSS class.
-
+    
     messageContent.textContent = message;
-    // Sets the text content of the message.
-
+    
     messageElement.appendChild(profileImage);
     messageElement.appendChild(messageContent);
-    // Appends the profile image and message content to the message element.
-
+  
     chatMessages.appendChild(messageElement);
-    // Appends the complete message (with profile image and text) to the chat messages section.
+    
 
     chatMessages.scrollTop = chatMessages.scrollHeight;
-    // Scrolls the chat to the bottom to ensure the latest message is visible.
+   
 }
 
 async function handleUserInput() {
-// Defines an asynchronous function `handleUserInput` to process and handle the user’s input.
+
     const message = userInput.value.trim();
     if (message) {
-        // Add user message
+        
         addMessage(message, true);
         userInput.value = '';
 
@@ -119,7 +107,7 @@ async function handleUserInput() {
             const response = await generateResponse(message);
             addMessage(cleanMarkdown(response), false);
             
-            // Save chat to history after each interaction
+
             saveChatToHistory();
         } catch (error) {
             console.error('Error:', error);
@@ -128,7 +116,7 @@ async function handleUserInput() {
     }
 }
 
-// Store chat in history after each message
+
 function saveChatToHistory() {
     const messages = Array.from(chatMessages.children).map(msg => ({
         text: msg.querySelector('.message-content').textContent,
@@ -138,7 +126,7 @@ function saveChatToHistory() {
     
     if (messages.length > 0) {
         const chatHistory = getChatHistory();
-        // Get the first message as title preview
+      
         const titlePreview = messages[0].text.substring(0, 30) + (messages[0].text.length > 30 ? '...' : '');
         
         chatHistory.unshift({
@@ -168,7 +156,7 @@ function getPreview(messages) {
     return firstMessage.length > 50 ? firstMessage.substring(0, 50) + '...' : firstMessage;
 }
 
-// History button functionality
+
 document.getElementById('history-btn').addEventListener('click', showHistory);
 
 function showHistory() {
@@ -213,33 +201,31 @@ function showHistory() {
         </div>
     `;
 
-    // Add event listeners
+    
     const closeBtn = historyContainer.querySelector('.close-history');
     closeBtn.addEventListener('click', () => {
         historyContainer.style.right = '-400px';
     });
 
-    // Delete individual chat
+   
     const deleteButtons = historyContainer.querySelectorAll('.delete-chat-btn');
     deleteButtons.forEach(btn => {
         btn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent chat from loading when clicking delete
+            e.stopPropagation(); 
             const index = parseInt(btn.dataset.index);
             deleteChat(index);
-            showHistory(); // Refresh the history panel
+            showHistory(); 
         });
     });
 
-    // Clear all history
     const clearAllBtn = historyContainer.querySelector('.clear-all-btn');
     clearAllBtn.addEventListener('click', () => {
         if (confirm('Are you sure you want to delete all chat history?')) {
             clearAllHistory();
-            showHistory(); // Refresh the history panel
+            showHistory();
         }
     });
     
-    // Load chat
     const historyItems = historyContainer.querySelectorAll('.history-item');
     historyItems.forEach(item => {
         item.addEventListener('click', () => {
@@ -250,7 +236,6 @@ function showHistory() {
     });
 }
 
-// Delete functions
 function deleteChat(index) {
     const chatHistory = getChatHistory();
     chatHistory.splice(index, 1);
@@ -261,7 +246,6 @@ function clearAllHistory() {
     localStorage.removeItem('chatHistory');
 }
 
-// Helper functions
 function formatDate(timestamp) {
     const date = new Date(timestamp);
     const now = new Date();
@@ -283,7 +267,6 @@ function getLastMessage(messages) {
     return `${lastMsg.isUser ? 'You' : 'Bot'}: ${text.length > 40 ? text.substring(0, 40) + '...' : text}`;
 }
 
-// Add styles for history panel
 const historyStyles = document.createElement('style');
 historyStyles.textContent = `
     .history-container {
@@ -395,26 +378,23 @@ historyStyles.textContent = `
 document.head.appendChild(historyStyles);
 
 sendButton.addEventListener('click', handleUserInput);
-// Adds an event listener to the send button that calls `handleUserInput` when clicked.
 
 userInput.addEventListener('keypress', (e) => {
-// Adds an event listener for when a key is pressed in the input field.
+
     if (e.key === 'Enter' && !e.shiftKey) {
-    // Checks if the 'Enter' key is pressed and Shift is not held (to distinguish from Shift+Enter for newlines).
+    
         e.preventDefault();
-        // Prevents the default behavior of adding a newline.
+        
 
         handleUserInput();
-        // Calls `handleUserInput` to send the message.
+        
     }
 });
 
-// New Message and History functionality
 document.getElementById('new-chat-btn').addEventListener('click', () => {
-    // Clear the chat messages
+
     chatMessages.innerHTML = '';
-    // Clear the input field
+
     userInput.value = '';
-    // Store current chat in history if it has messages
     saveChatToHistory();
 });
