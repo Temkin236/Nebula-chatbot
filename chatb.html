@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/jpg" href="bott.jpeg">
+    <title>Nebula AI Chatbot</title>
+    <link rel="stylesheet" href="chatbot.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>Nebula AI Chatbot</h1>
+            <div class="header-icons">
+                <button id="new-chat-btn" class="icon-btn" title="New Chat">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <button id="history-btn" class="icon-btn" title="Chat History">
+                    <i class="fas fa-history"></i>
+                </button>
+                <a href="welcome.html" class="icon-btn" title="Logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </div>
+        </div>
+        <div class="chat-messages" id="chat-messages"></div>
+        <div class="chat-input-container">
+            <input type="text" id="user-input" placeholder="Type your message...">
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
